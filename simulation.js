@@ -1,4 +1,6 @@
 const homeLink = document.getElementById("home-link");
+const particle_cnt = document.getElementById("count_of_particles");
+const fps_cnt = document.getElementById("fps");
 homeLink.addEventListener("click", function(event) {
     event.preventDefault();
     window.location.href = "home.html";
@@ -88,9 +90,10 @@ function draw(){
   
   fill(255);
   text("tap to add more particles", 42,42);
-  text(pointCount + " particles", mouseX-52,mouseY+48);
-
-   text(Math.floor(frameRate()) + " FPS", mouseX-52,mouseY-38);
+  particle_cnt.textContent = pointCount;
+  fps_cnt.textContent = Math.floor(frameRate());
+   //text(pointCount + " particles", mouseX-52,mouseY+48);
+   //text(Math.floor(frameRate()) + " FPS", mouseX-52,mouseY-38);
   noFill();
 }
 

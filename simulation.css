@@ -3,6 +3,10 @@ body {
     padding: 0;
     background: #000;
 }
+.details{
+    display: flex;
+    justify-content: space-around;
+}
 a {
     position: absolute;
     bottom: 5vh;
