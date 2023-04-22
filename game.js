@@ -1,38 +1,15 @@
-/***************
- * PART FIVE - Finishing touches
- ***************/
+const homeLink = document.getElementById("home-link");
+homeLink.addEventListener("click", function(event) {
+    event.preventDefault();
+    window.location.href = "home.html";
+});
 
-/* NOTES TO REMEMBER
- * Could add
- * - hitboxes to all objects to make collision better
- * - levels
- * - bosses
- * - explosions / particles
- * - parallax background
- * - vectors for movement
- * - lirbraries! http://www.createjs.com/#!/CreateJS
- */
-
-/* RESOURCES
- * http://www.w3schools.com/html5/html5_ref_av_dom.asp
- * http://www.superflashbros.net/as3sfxr/
- */
-
-/**
- * Initialize the Game and start it.
- */
 var game = new Game();
 
 function init() {
 	game.init();
 }
 
-
-/**
- * Define an object to hold all our images for the game so images
- * are only ever created once. This type of object is known as a
- * singleton.
- */
 var imageRepository = new function() {
 	// Define images
 	this.background = new Image();
@@ -394,29 +371,6 @@ function QuadTree(boundBox, lvl) {
 	};
 }
 
-
-/**
- * Custom Pool object. Holds Bullet objects to be managed to prevent
- * garbage collection.
- * The pool works as follows:
- * - When the pool is initialized, it popoulates an array with
- *   Bullet objects.
- * - When the pool needs to create a new object for use, it looks at
- *   the last item in the array and checks to see if it is currently
- *   in use or not. If it is in use, the pool is full. If it is
- *   not in use, the pool "spawns" the last item in the array and
- *   then pops it from the end and pushed it back onto the front of
- *   the array. This makes the pool have free objects on the back
- *   and used objects in the front.
- * - When the pool animates its objects, it checks to see if the
- *   object is in use (no need to draw unused objects) and if it is,
- *   draws it. If the draw() function returns true, the object is
- *   ready to be cleaned so it "clears" the object and uses the
- *   array function splice() to remove the item from the array and
- *   pushes it to the back.
- * Doing this makes creating/destroying objects in the pool
- * constant.
- */
 function Pool(maxSize) {
 	var size = maxSize; // Max bullets allowed in the pool
 	var pool = [];
@@ -614,8 +568,8 @@ function Enemy() {
 		this.speedX = 0;
 		this.speedY = speed;
 		this.alive = true;
-		this.leftEdge = this.x - 90;
-		this.rightEdge = this.x + 90;
+		this.leftEdge = this.x - 100;
+		this.rightEdge = this.x + 1050;
 		this.bottomEdge = this.y + 140;
 	};
 
@@ -685,13 +639,6 @@ Enemy.prototype = new Drawable();
  * the game.
  */
 function Game() {
-	/*
-	 * Gets canvas information and context and sets up all game
-	 * objects.
-	 * Returns true if the canvas is supported and false if it
-	 * is not. This is to stop the animation script from constantly
-	 * running on browsers that do not support the canvas.
-	 */
 	this.init = function() {
 		// Get the canvas elements
 		this.bgCanvas = document.getElementById('background');
@@ -884,13 +831,6 @@ function SoundPool(maxSize) {
 	};
 }
 
-
-/**
- * The animation loop. Calls the requestAnimationFrame shim to
- * optimize the game loop and draws all game objects. This
- * function must be a gobal function and cannot be within an
- * object.
- */
 function animate() {
 	document.getElementById('score').innerHTML = game.playerScore;
 
@@ -942,46 +882,18 @@ function detectCollision() {
 	}
 };
 
-
-// The keycodes that will be mapped when a user presses a button.
-// Original code by Doug McInnes
-KEY_CODES = {
-  32: 'space',
-  37: 'left',
-  38: 'up',
-  39: 'right',
-  40: 'down',
-}
-
-// Creates the array to hold the KEY_CODES and sets all their values
-// to true. Checking true/flase is the quickest way to check status
-// of a key press and which one was pressed when determining
-// when to move and which direction.
+let KEY_CODES = { 32: 'space', 37: 'left', 38: 'up', 39: 'right', 40: 'down' }
 KEY_STATUS = {};
 for (code in KEY_CODES) {
   KEY_STATUS[KEY_CODES[code]] = false;
 }
-/**
- * Sets up the document to listen to onkeydown events (fired when
- * any key on the keyboard is pressed down). When a key is pressed,
- * it sets the appropriate direction to true to let us know which
- * key it was.
- */
 document.onkeydown = function(e) {
-	// Firefox and opera use charCode instead of keyCode to
-	// return which key was pressed.
 	var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
-  if (KEY_CODES[keyCode]) {
+  	if (KEY_CODES[keyCode]) {
 		e.preventDefault();
-    KEY_STATUS[KEY_CODES[keyCode]] = true;
-  }
+    	KEY_STATUS[KEY_CODES[keyCode]] = true;
+  	}
 }
-/**
- * Sets up the document to listen to ownkeyup events (fired when
- * any key on the keyboard is released). When a key is released,
- * it sets teh appropriate direction to false to let us know which
- * key it was.
- */
 document.onkeyup = function(e) {
   var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
   if (KEY_CODES[keyCode]) {
@@ -989,13 +901,6 @@ document.onkeyup = function(e) {
     KEY_STATUS[KEY_CODES[keyCode]] = false;
   }
 }
-
-
-/**
- * requestAnim shim layer by Paul Irish
- * Finds the first API that works to optimize the animation loop,
- * otherwise defaults to setTimeout().
- */
 window.requestAnimFrame = (function(){
 	return  window.requestAnimationFrame       ||
 			window.webkitRequestAnimationFrame ||
