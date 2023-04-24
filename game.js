@@ -6,6 +6,8 @@ homeLink.addEventListener("click", function(event) {
 
 var game = new Game();
 
+var gameLevel = 1;
+
 function init() {
 	game.init();
 }
@@ -723,10 +725,10 @@ function Game() {
 		var x = 100;
 		var y = -height;
 		var spacer = y * 1.5;
-		for (var i = 1; i <= 18; i++) {
+		for (var i = 1; i <= gameLevel * gameLevel * 4; i++) {
 			this.enemyPool.get(x,y,2);
 			x += width + 25;
-			if (i % 6 == 0) {
+			if (i % (gameLevel * 4) == 0) {
 				x = 100;
 				y += spacer
 			}
@@ -756,6 +758,7 @@ function Game() {
 		               imageRepository.spaceship.width, imageRepository.spaceship.height);
 
 		this.enemyPool.init("enemy");
+		gameLevel = 1;
 		this.spawnWave();
 		this.enemyBulletPool.init("enemyBullet");
 
@@ -833,7 +836,7 @@ function SoundPool(maxSize) {
 
 function animate() {
 	document.getElementById('score').innerHTML = game.playerScore;
-
+	document.getElementById('level').innerHTML = gameLevel;
 	// Insert objects into quadtree
 	game.quadTree.clear();
 	game.quadTree.insert(game.ship);
@@ -845,6 +848,7 @@ function animate() {
 
 	// No more enemies
 	if (game.enemyPool.getPool().length === 0) {
+		gameLevel ++;
 		game.spawnWave();
 	}
 
